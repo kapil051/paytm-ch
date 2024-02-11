@@ -1,24 +1,19 @@
-const express= require("express");
-
+import  express from "express";
+import mainRouter from "./routes/index.js";
+import cors from "cors";
 
   const app=express();
-
     const port=3000;
 
-    app.use(express.json());  
-  
-      
+             app.use(express.json());  
+             app.use(cors());
+             app.use("/api/v1",mainRouter);
 
-     app.get('/',(req,res)=>{  
+
+      app.get('/',(req,res)=>{  
             res.send("hello from backend");
      })
 
-
-
-  app.use((err,req,res,next)=>{
-        res.status(404).json({"msg":"invalid input from last handler"});
-           next();
-  })
 
 app.listen(port,()=>{
       console.log(`app listening on the port ${port}`);
