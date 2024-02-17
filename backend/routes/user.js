@@ -1,6 +1,6 @@
 import  express  from "express";
 const router=express.Router();
-import {Users} from "../db.js";
+import {Account, Users} from "../db.js";
 import zod from "zod";
 import jwt from "jsonwebtoken";
 import JWT_SECRET from "../config.js";
@@ -47,6 +47,12 @@ import authMiddleware from "../middleware.js";
                   lastname:req.body.lastname,
                   password:req.body.password,
                })
+
+
+                 await Account.create({
+                     userId:user._id,
+                     balance: 1+Math.random()*10000,
+                  })
 
                
 
