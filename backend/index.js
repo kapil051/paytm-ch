@@ -10,11 +10,6 @@ import cors from "cors";
              app.use("/api/v1",mainRouter);
 
 
-      app.get('/',(req,res)=>{  
-            res.send("hello from backend");
-     })
-
-
 app.listen(port,()=>{
       console.log(`app listening on the port ${port}`);
 }) 

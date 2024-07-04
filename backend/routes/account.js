@@ -29,51 +29,9 @@ const router=express.Router();
  
   })
 
-  //  router.post("/transfer",authMiddleware,async(req,res,next)=>{
+ 
 
-  //                const {amount,to}=req.body;
-
-  //            const myAccount=await Account.findOne({
-  //                   userId:req.userId,
-  //             })
-
-  //                if(myAccount.balance<=amount){
-                     
-  //                    return res.status(200).json({
-  //                        msg:"insufficient balance in your account",
-  //                    })
-
-  //                }
-
-  //                  try{
-
-  //                     const destAccount=await Account.findOne({
-  //                          userId:to,
-  //                      }) 
-                
-  //                    myAccount.balance=myAccount.balance-amount;
-  //                    destAccount.balance=destAccount.balance+amount; 
-
-  //                    await myAccount.save();
-  //                    await destAccount.save();
-
-  //                        res.status(200).json({
-  //                         myBal:myAccount.balance,
-  //                         destBal:destAccount.balance,
-  //                        })
-
-  //                  }catch(e){
-
-  //                     res.status(200).json({
-  //                     error:"error while updating balances",
-  //                        e,
-  //                    })
-
-  //                  }
-
-  //  })
-
-  router.post("/transfer", authMiddleware, async (req, res) => {
+   router.post("/transfer", authMiddleware, async (req, res) => {
       const session = await mongoose.startSession();
 
           session.startTransaction();
@@ -112,9 +70,10 @@ const router=express.Router();
    
 
     res.json({
-          message: "Transfer successful"
+          message: "transfer successful"
     });
-});
+    
+   });
 
 
 

@@ -35,7 +35,7 @@ import authMiddleware from "../middleware.js";
               if(existingUser){
 
                      return res.status(411).json({
-                          "msg":"email already taken"
+                          "msg":"user already present"
                      })
 
               }
@@ -79,7 +79,7 @@ import authMiddleware from "../middleware.js";
             const {success}=signinBody.safeParse(req.body);
 
                if(!success){
-                    res.status(411).json({
+                   return res.status(411).json({
                        "msg":"incorrect fileds",  
                     })
                }
@@ -90,7 +90,7 @@ import authMiddleware from "../middleware.js";
            })
            
              if(!user) {
-                    res.status(411).json({
+                   return res.status(411).json({
                         "msg":"no user present corresponding to username",
                     })
              }
@@ -117,7 +117,7 @@ import authMiddleware from "../middleware.js";
                    password:zod.string().optional(),
           })
 
-          router.put("/",authMiddleware,async(req,res,next)=>{
+            router.put("/",authMiddleware,async(req,res,next)=>{
                
                 const {success}=updateBody.safeParse(req.body)
 
@@ -166,7 +166,7 @@ import authMiddleware from "../middleware.js";
             })
 
 
-     router.get("/bulk", async (req, res) => {
+           router.get("/bulk", async (req, res) => {
 
                const filter = req.query.filter || "";
            
