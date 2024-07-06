@@ -16,7 +16,7 @@ export const Signin = ({ setValid }) => {
 
           <div>
 
-                <Navbar></Navbar>
+                <Navbar name={""}></Navbar>
 
                <div className="flex justify-center items-center ">
 

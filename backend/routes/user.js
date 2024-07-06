@@ -18,6 +18,7 @@ import authMiddleware from "../middleware.js";
        router.post("/signup",async(req,res,next)=>{
  
                 const {success}=signupBody.safeParse(req.body);
+                      console.log(req.body);
 
                    if(!success){
 
@@ -61,7 +62,8 @@ import authMiddleware from "../middleware.js";
                  },JWT_SECRET);
            
                    res.json({
-                     "msg":"user created successfully",
+                        "msg":"user created successfully",
+                        user:user,
                         token:token,
                    })
 

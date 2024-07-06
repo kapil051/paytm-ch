@@ -5,9 +5,11 @@ import {Footer }from "./Footer"
 
 export function Home(){
 
+    const name = localStorage.getItem("name");
+
        return (
             <div>
-                <Navbar></Navbar>
+                <Navbar name={name}></Navbar>
                 <Mid1></Mid1>
                 <Footer></Footer>
             </div>

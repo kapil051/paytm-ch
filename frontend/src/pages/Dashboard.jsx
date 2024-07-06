@@ -1,156 +1,98 @@
-import { useEffect, useState } from "react"
- import axios from "axios"
- import {useNavigate} from "react-router-dom"
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Footer } from "./Footer";
+import { Navbar } from "./Navbar";
 
+export const Dashboard = () => {
+  const navigate = useNavigate();
 
+  const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState("");
+  const [balance, setBalance] = useState(0);
 
-export const Dashboard=()=>{
+  const token = localStorage.getItem("token");
+  const name = localStorage.getItem("name");
 
-   const navigate=useNavigate();
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/account/balance", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        setBalance(res.data.balance);
+      });
+  }, [token]);
 
-       const [users,setUser]=useState([]);
-       const [filter,setFilter]=useState("");   
-       const [balance,setBalance]=useState(0); 
-      
-       
-                const token=localStorage.getItem("token");
-                const id=localStorage.getItem("id");
-                const name=localStorage.getItem("name");
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
+      .then((response) => {
+        setUsers(response.data.user);
+      });
+  }, [filter]);
 
-                  //  useEffect(()=>{
+  return (
+    <div className="min-h-screen bg-gray-100">
 
-                  //        axios.post("http://localhost:3000/api/v1/auth",{},{
-                  //             headers:"Bearer "+token,
-                  //        })
-                  //        .then((res)=>{
+      <Navbar name={name} />
 
-                  //              console.log(res);
- 
-                  //             if(res.data.msg=="false"){
-                  //                 navigate("/");
-                  //                    return;
-                  //             }
-
-                  //        })
-
-
-                  //  },[])
-
-              
-                   useEffect(()=>{
-
-                        axios.get("http://localhost:3000/api/v1/account/balance",{
-                                headers:{
-                                    Authorization:"Bearer "+token,
-                                }
-                            })
-                           .then((res)=>{
-                                setBalance(res.data.balance);
-                           })
-                             
-
-                   },[])
-
-
-
-           useEffect(()=>{
-
-                 axios.get("http://localhost:3000/api/v1/user/bulk?filter="+filter)
-                    .then((response)=>{
-                       setUser(response.data.user);
-                    })
-
-           },[filter])
-
-        
-return(
- <>
-
-<div className="flex justify-between shadow-md bg-gray-300">
-
-<div className="flex items-center cursor-pointer">
-      PayTM APP
-</div>
-
-<div className="flex gap-4">
-
-       <div className="flex items-center">
-          Hello {name.toUpperCase()}
-       </div>
-
-       <div className="flex justify-center rounded-full bg-slate-400 h-12 w-12 mt-1 mr-2" >
-
-              <div className="flex justify-center items-center cursor-pointer">{name[0].toUpperCase()}</div>
-
-             
-       </div>
-      
-
-</div>
-
-</div>
-
-<div className="flex">
-    <div className="font-bold text-lg">
-       My Balance:
-    </div>
-    
-      <div className="font-semibold ml-4 text-lg" >
-         Rs. {balance}
+      <div className="container mx-auto pt-24">
+        <div className=" flex justify-between items-center bg-white shadow-md rounded-lg p-6 mb-6">
+          <div className="text-lg font-semibold text-orange-500">My Balance:</div>
+          <div className="text-2xl font-bold text-black">Rs. {balance}</div>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <div className="text-lg font-semibold text-orange-500 mb-4">Users</div>
+          <input
+            type="text"
+            placeholder="Search user..."
+            className="border p-2 w-full rounded-md shadow-sm mb-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            onChange={(e) => setFilter(e.target.value)}
+          />
+          {users.map((user) =>
+            user._id !== localStorage.getItem("id") ? (
+              <User key={user._id} user={user} navigate={navigate} />
+            ) : null
+          )}
+        </div>
       </div>
-</div>
 
-<div className="font-bold mt-6 text-lg">
-        Users
- </div>
+      <Footer />
 
-<div className="my-2">
-      <input onChange={(e)=>{
-            setFilter(e.target.value)
-      }}  type="text" placeholder="...search user" className="border p-2 w-full rounded-md shadow-md bg-slate-200 " />
- </div>
+    </div>
+  );
+};
 
-<div>
-         {users.map((user)=> <User user={user}></User>)}
-</div>
+const User = ({ user, navigate }) => {
+  return (
+    <div className="bg-white shadow-md rounded-lg p-4 mb-4 flex items-center justify-between hover:shadow-lg transition duration-300">
+      <div className="flex items-center">
+        <div className="bg-yellow-200 rounded-full h-12 w-12 flex items-center justify-center text-yellow-600 font-bold">
+          {user.firstname[0]}
+        </div>
+        <div className="ml-4">
+          <div className="text-lg font-medium text-black">
+            {user.firstname} {user.lastname}
+          </div>
+        </div>
+      </div>
+      <button
+        onClick={() =>
+          navigate(`/send?id=${user._id}&name=${user.firstname} ${user.lastname}`)
+        }
+        className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300"
+      >
+        Send Money
+      </button>
+    </div>
+  );
+};
 
-</>
-)
+export default Dashboard;
 
-
-function User({user}){
-
-        const navigate=useNavigate();
-
-           if(user._id!=id){
-
-            return(
-                  <div className="h-14 bg-slate-300 w-full mt-2 flex justify-between items-center " >
-        
-                        <div className=" flex items-center gap-4 " >
-                                 <div className=" rounded-full bg-yellow-100  w-10 h-10 flex justify-center items-center " >{ user.firstname[0].toUpperCase() }</div>
-                                  <div> {user.firstname} {user.lastname} </div>
-                        </div>
-        
-                       <div className=" flex justify-center items-center " >
-        
-                            <div className=" h-10 w-32 border rounded-md shadow-md bg-blue-500 flex justify-center items-center " >
-                                       <button onClick={(e)=>{
-                                            navigate("/send?id="+user._id+"&name="+user.firstname +" "+ user.lastname);
-                                       }} >Send Money</button>
-                            </div>
-        
-                      </div>
-        
-                       
-                  
-                 </div>
-              )
-
-           }
-
-  }      
-}
 
 
 
